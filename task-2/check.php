@@ -74,19 +74,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
   }
 
-  if(isset($_POST["submit"])) {
-    $target_dir = "uploads/";
-    $target_file = $target_dir . basename($_FILES["image"]["name"]);
-    $filename = $_FILES["image"]["name"];
-    move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-    $filepath = "uploads/".$filename;
-    $d=1;
-  }
-
-  else {
-    $_SESSION["imageErr"] = "Image is required";
-    header("location : index.php");
-  }
+  $target_dir = "uploads/";
+  $target_file = $target_dir . basename($_FILES["image"]["name"]);
+  $filename = $_FILES["image"]["name"];
+  move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+  $filepath = "uploads/".$filename;
+  $d=1;
 
   if($f==1 && $c==1 && $d==1) {
     $greet = "Hello";
