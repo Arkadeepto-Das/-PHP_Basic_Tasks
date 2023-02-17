@@ -18,60 +18,32 @@ session_start();
   </style>
 </head>
 <body>
-<?php
-$f="";
-$c="";
-$d="";
-?>
-
 <div>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  
-  if (empty($_POST["fname"])) {
-    $_SESSION["fnameErr"] = "First name is required";
+
+  $_SESSION["fname"] = input($_POST["fname"]);
+
+  if(!preg_match("/^[A-Z]/",$_SESSION["fname"])) {
+    $_SESSION["fnameErr"] = "First name should start with capital letter";
+    header("Location: index.php");
+  }
+        
+  elseif (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_SESSION["fname"]) || preg_match("/[0-9]/",$_SESSION["fname"])) {
+    $_SESSION["fnameErr"] = "First name should contain only alphabets";
     header("Location: index.php");
   }
 
-  else {
-    $_SESSION["fname"] = input($_POST["fname"]);
+  $_SESSION["lname"] = input($_POST["lname"]);
 
-    if(!preg_match("/^[A-Z]/",$_SESSION["fname"])) {
-      $_SESSION["fnameErr"] = "First name should start with capital letter";
-      header("Location: index.php");
-    }
-        
-    elseif (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_SESSION["fname"]) || preg_match("/[0-9]/",$_SESSION["fname"])) {
-      $_SESSION["fnameErr"] = "First name should contain only alphabets";
-      header("Location: index.php");
-    }
-
-    else {
-      $f=1;
-    }
-  }
-
-  if (empty($_POST["lname"])) {
-    $_SESSION["lnameErr"] = "Last name is required";
+  if(!preg_match("/^[A-Z]/",$_SESSION["lname"])) {
+    $_SESSION["lnameErr"] = "Last name should start with capital letter";
     header("Location: index.php");
   }
-
-  else {
-    $_SESSION["lname"] = input($_POST["lname"]);
-
-    if(!preg_match("/^[A-Z]/",$_SESSION["lname"])) {
-      $_SESSION["lnameErr"] = "Last name should start with capital letter";
-      header("Location: index.php");
-    }
         
-    elseif (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_SESSION["lname"]) || preg_match("/[0-9]/",$_SESSION["lname"])) {
-      $_SESSION["lnameErr"] = "Last name should contain only alphabets";
-      header("Location: index.php");
-    }
-
-    else {
-      $c=1;
-    }
+  elseif (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_SESSION["lname"]) || preg_match("/[0-9]/",$_SESSION["lname"])) {
+    $_SESSION["lnameErr"] = "Last name should contain only alphabets";
+    header("Location: index.php");
   }
 
   if(isset($_POST["submit"])) {
@@ -80,25 +52,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $filename = $_FILES["image"]["name"];
     move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
     $filepath = "uploads/".$filename;
-    $d=1;
   }
 
-  else {
-    $_SESSION["imageErr"] = "Image is required";
-    header("location : index.php");
-  }
-
-  if($f==1 && $c==1 && $d==1) {
-    $greet = "Hello";
-    echo "<img src='$filepath'>";
-    echo "<p>" . $greet . " " . $_SESSION["fname"] . " " . $_SESSION["lname"] . "</p>";
-  }
+  $greet = "Hello";
+  echo "<img src='$filepath'>";
+  echo "<p>" . $greet . " " . $_SESSION["fname"] . " " . $_SESSION["lname"] . "</p>";
 
   $head_1 = "Subject";
   $head_2 = "Marks";
   $lines = input($_POST["marks"]);
   $lines_arr = explode("\n", $lines);
-  $delimiters = ['-', ',', '.', '/', '_', '=', ':', " "];
+  $delimiters = ['-', ',', '.', '/', '_', '=', ':', ' '];
   
   echo "<table>";
   echo "<tr>";
@@ -106,15 +70,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   echo "<th>" . $head_2 . "</th>";
   echo "</tr>";
   foreach($lines_arr as $val) {
-    $new_val = str_replace($delimiters, $delimiters[0], $val);
-    $subject = array_filter(explode($delimiters[0], $new_val));
-    echo "<tr>";
-    foreach($subject as $data) {
-      echo "<td>" . $data . "</td>";
+    $count = 0;
+    $slash = 0;
+    $split = str_split($val);
+    foreach($split as $val2) {
+      if(preg_match('/[0-9]/', $val2)) {
+        ++$count;
+      }
+
+      if($val2=='|') {
+        ++$slash;
+      }
     }
-    echo "</tr>";
+    
+    if(preg_match('/^[a-zA-Z]/', $val) && preg_match('/[0-9]$/', $val) && $count<=3 && $slash==1) {
+      $subject = array_filter(explode('|', $val));
+      echo "<tr>";
+      foreach($subject as $data) {
+      echo "<td>" . $data . "</td>";
+      }
+      echo "</tr>";
+    }
+
+    else {
+      $_SESSION["marksErr"] = "Put in the format subject|marks.";
+      header("Location: index.php");
+    }
   }
   echo "</table>";
+
+//   $_SESSION["code"] = $_POST["code"];
+//   $_SESSION["number"] = $_POST["number"];
+
+//   if(preg_match('/[A-Za-z]/', $_SESSION["number"])) {
+//     $_SESSION["numberErr"] = "Phone number should be of 10 digits";
+//     header("Location: index.php");
+//   }
+
+//   else {
+//     $phone = $_SESSION["code"] . $_SESSION["number"];
+//     $print = "Phone number : ";
+//     echo "<p>" . $print . $phone . "</p>";
+//   }
+
+//   $_SESSION["email"] = $_POST["email"];
+//   if(validate($_SESSION["email"])===false) {
+//     $_SESSION["emailErr"] = "Enter your Email-ID in proper format";
+//     header("Location: index.php");
+//   }
+//   else {
+//     $print = "Email-ID : ";
+//     echo "<p>" . $print . $_SESSION["email"] . "</p>";
+//   }
 
 }
 
@@ -124,6 +131,37 @@ function input($data) {
   $data = htmlspecialchars($data);
   return $data;
 }
+
+// function validate($data) {
+//   $curl = curl_init();
+  
+//   curl_setopt_array($curl, array(
+//     CURLOPT_URL => "https://api.apilayer.com/email_verification/check?email=".$data,
+//     CURLOPT_HTTPHEADER => array(
+//       "Content-Type: text/plain",
+//       "apikey: 7qgDJ6nDyaxddvIxYnB13x39ztMT09TV"
+//     ),
+//     CURLOPT_RETURNTRANSFER => true,
+//     CURLOPT_ENCODING => "",
+//     CURLOPT_MAXREDIRS => 10,
+//     CURLOPT_TIMEOUT => 0,
+//     CURLOPT_FOLLOWLOCATION => true,
+//     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//     CURLOPT_CUSTOMREQUEST => "GET"
+//   )
+// );
+
+// $response = curl_exec($curl);
+
+// curl_close($curl);
+// $validationResult = json_decode($response, true);
+// $flag=true;
+// if ($validationResult['format_valid']==false || $validationResult['smtp_check']==false) {
+//   $flag=false;
+// }
+// curl_close($curl);
+// return $flag;
+// }
 
 ?>
 </div>
