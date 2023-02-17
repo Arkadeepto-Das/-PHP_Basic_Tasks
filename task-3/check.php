@@ -62,7 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $head_2 = "Marks";
   $lines = input($_POST["marks"]);
   $lines_arr = explode("\n", $lines);
-  $delimiters = ['-', ',', '.', '/', '_', '=', ':', ' '];
   
   echo "<table>";
   echo "<tr>";
