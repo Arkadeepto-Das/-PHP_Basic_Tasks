@@ -24,5 +24,5 @@ foreach($_SESSION["result"] as $key=>$val) {
   $pdf->Cell(95,10,$key,1,0,'C');
   $pdf->Cell(95,10,$val,1,1,'C');
 }
-$pdf->Output();
+$pdf->Output('D','Result.pdf');
 ?>
