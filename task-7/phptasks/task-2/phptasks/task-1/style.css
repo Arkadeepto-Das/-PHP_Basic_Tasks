@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    width: 25rem;
+    font-size: 20px;
+    justify-content: space-between;
+}
+
+div {
+    line-height: 35px;
+    font-size: 25px;
+}
+
+h1 {
+    line-height: 80px;
+}
+
+form span.error {
+    color: red;
+}
