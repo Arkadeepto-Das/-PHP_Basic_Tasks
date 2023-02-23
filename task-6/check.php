@@ -16,29 +16,30 @@ session_start();
 <div>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $c = 0;
 
   $_SESSION["fname"] = input($_POST["fname"]);
 
   if(!preg_match("/^[A-Z]/",$_SESSION["fname"])) {
     $_SESSION["fnameErr"] = "First name should start with capital letter";
-    header("Location: index.php");
+    ++$c;
   }
         
   elseif (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_SESSION["fname"]) || preg_match("/[0-9]/",$_SESSION["fname"])) {
     $_SESSION["fnameErr"] = "First name should contain only alphabets";
-    header("Location: index.php");
+    ++$c;
   }
 
   $_SESSION["lname"] = input($_POST["lname"]);
 
   if(!preg_match("/^[A-Z]/",$_SESSION["lname"])) {
     $_SESSION["lnameErr"] = "Last name should start with capital letter";
-    header("Location: index.php");
+    ++$c;
   }
         
   elseif (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $_SESSION["lname"]) || preg_match("/[0-9]/",$_SESSION["lname"])) {
     $_SESSION["lnameErr"] = "Last name should contain only alphabets";
-    header("Location: index.php");
+    ++$c;
   }
 
   if(isset($_POST["submit"])) {
@@ -55,45 +56,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $lines_arr = explode("\n", $lines);
   
   foreach($lines_arr as $val) {
-    $count = 0;
-    $slash = 0;
-    $split = str_split($val);
-    foreach($split as $val2) {
-      if(preg_match('/[0-9]/', $val2)) {
-        ++$count;
-      }
+    $data = explode('|', $val);
 
-      if($val2=='|') {
-        ++$slash;
-      }
+    if(preg_match('/[0-9]/', $data[0]) || preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $data[0])) {
+      $_SESSION["marksErr"] = "Put in the format subject|marks.";
+      ++$c;
     }
-    
-    if(preg_match('/^[a-zA-Z]/', $val) && preg_match('/[0-9]$/', $val) && $count<=3 && $slash==1) {
-      $data = explode('|', $val);
-      array_push($subject,$data[0]);
-      array_push($marks,$data[1]);
-      $_SESSION["result"] = array_combine($subject,$marks);
+
+    elseif(is_numeric($data[1])!=1) {
+      $_SESSION["marksErr"] = "Put in the format subject|marks.";
+      ++$c;
     }
 
     else {
-      $_SESSION["marksErr"] = "Put in the format subject|marks.";
-      header("Location: index.php");
+      array_push($subject,$data[0]);
+      array_push($marks,$data[1]);
     }
+
   }
+
+  $_SESSION["result"] = array_combine($subject,$marks);
 
   $_SESSION["code"] = $_POST["code"];
   $_SESSION["number"] = $_POST["number"];
 
   if(preg_match('/[A-Za-z]/', $_SESSION["number"])) {
     $_SESSION["numberErr"] = "Phone number should be of 10 digits";
-    header("Location: index.php");
+    ++$c;
   }
 
   $_SESSION["email"] = $_POST["email"];
   
   if(validate($_SESSION["email"])===false) {
     $_SESSION["emailErr"] = "Enter your Email-ID in proper format";
-    header("Location: index.php");
+    ++$c;
   }
 
 }
@@ -136,7 +132,13 @@ curl_close($curl);
 return $flag;
 }
 
-header("Location: pdf.php");
+if($c>0) {
+  header("Location: index.php");
+}
+
+else {
+  header("Location: pdf.php");
+}
 ?>
 </div>
 </body>
