@@ -11,6 +11,14 @@ body {
   align-items: center;
 }
 
+ul {
+  list-style: none;
+  display: flex;
+  width: 30rem;
+  font-size: 20px;
+  justify-content: space-between;
+}
+
 div {
   display: inline-block;
 }

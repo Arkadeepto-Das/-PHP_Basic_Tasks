@@ -18,6 +18,31 @@ $_SESSION["tasknum"] = 4;
   <link rel="stylesheet" href="style-index.css">
 </head>
 <body>
+
+<ul>
+  <li>
+    <a href="../task-1/index.php">task-1</a>
+  </li>
+  <li>
+    <a href="../task-2/index.php">task-2</a>
+  </li>
+  <li>
+    <a href="../task-3/index.php">task-3</a>
+  </li>
+  <li>
+    <a href="../task-4/index.php">task-4</a>
+  </li>
+  <li>
+    <a href="../task-5/index.php">task-5</a>
+  </li>
+  <li>
+    <a href="../task-6/index.php">task-6</a>
+  </li>
+  <li>
+      <a href="../../logout.php">Logout</a>
+  </li>
+</ul>
+
 <div>
   <h1>Form</h1>
   <form method="post" action="check.php" enctype="multipart/form-data" >

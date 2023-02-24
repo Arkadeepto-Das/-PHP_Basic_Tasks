@@ -32,6 +32,9 @@ session_start();
     <li>
       <a href="phptasks/task-6/index.php">task-6</a>
     </li>
+    <li>
+      <a href="logout.php">Logout</a>
+    </li>
   </ul>
 </body>
 </html>

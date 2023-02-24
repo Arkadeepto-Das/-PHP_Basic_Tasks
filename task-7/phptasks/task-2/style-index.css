@@ -11,6 +11,14 @@ body {
   justify-content: center;
 }
 
+ul {
+  list-style: none;
+  display: flex;
+  width: 30rem;
+  font-size: 20px;
+  justify-content: space-between;
+}
+
 div {
   line-height: 35px;
   font-size: 25px;

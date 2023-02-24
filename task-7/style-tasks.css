@@ -1,3 +1,11 @@
 body {
   margin-left: 50px;
 }
+
+ul {
+  font-size: 20px;
+}
+
+li {
+  padding-bottom: 20px;
+}
