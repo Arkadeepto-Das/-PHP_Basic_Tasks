@@ -1,3 +1,5 @@
+<!-- HTML Part -->
+
 <?php
   session_start();
 ?>
