@@ -1,6 +1,14 @@
 <!-- OOPS and checking Part -->
 
 <?php
+
+  require 'vendor/autoload.php';
+
+  use GuzzleHttp\Client;
+
+?>
+
+<?php
 class Check {
 
   public $firstName;
@@ -88,42 +96,77 @@ class Check {
 
   function emailCheck($email) {
 
-    $curl = curl_init();
+    // $curl = curl_init();
     
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => "https://api.apilayer.com/email_verification/check?email=".$email,
-      CURLOPT_HTTPHEADER => array(
-        "Content-Type: text/plain",
-        "apikey: 7qgDJ6nDyaxddvIxYnB13x39ztMT09TV"
-      ),
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => "",
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => "GET"
-      )
-    );
+    // curl_setopt_array($curl, array(
+    //   CURLOPT_URL => "https://api.apilayer.com/email_verification/check?email=".$email,
+    //   CURLOPT_HTTPHEADER => array(
+    //     "Content-Type: text/plain",
+    //     "apikey: 7qgDJ6nDyaxddvIxYnB13x39ztMT09TV"
+    //   ),
+    //   CURLOPT_RETURNTRANSFER => true,
+    //   CURLOPT_ENCODING => "",
+    //   CURLOPT_MAXREDIRS => 10,
+    //   CURLOPT_TIMEOUT => 0,
+    //   CURLOPT_FOLLOWLOCATION => true,
+    //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //   CURLOPT_CUSTOMREQUEST => "GET"
+    //   )
+    // );
     
-    $response = curl_exec($curl);
+    // $response = curl_exec($curl);
     
-    curl_close($curl);
-    $validationResult = json_decode($response, true);
-    $flag=true;
-    if ($validationResult['format_valid']==false || $validationResult['smtp_check']==false) {
-      $flag=false;
-    }
-    curl_close($curl);
+    // curl_close($curl);
+    // $validationResult = json_decode($response, true);
+    // $flag=true;
+    // if ($validationResult['format_valid']==false || $validationResult['smtp_check']==false) {
+    //   $flag=false;
+    // }
+    // curl_close($curl);
 
-    if($flag==false) {
+    // if($flag==false) {
+    //   $_SESSION["emailErr"] = "Enter your Email-ID in proper format";
+    // }
+
+    // else {
+    //   return $email;
+    // }
+
+    $client = new Client ([
+      // Creating client using base uri.
+      'base_uri' => 'https://api.apilayer.com',
+    ]);
+    
+    // Sending request to https://api.apilayer.com/email_verification/check?email=.
+    $response = $client->request('GET', '/email_verification/check?email=' . $email, [
+      "headers" => [
+        'Content-Type' => 'text/plain',
+        'apikey' => '7qgDJ6nDyaxddvIxYnB13x39ztMT09TV'
+      ]
+    ]);
+
+    // Retrieving body of the response using getBody() method.
+    $body = $response->getBody();
+    // Converting JSON data to object.
+    $object = json_decode($body);
+    $flag = true;
+
+    if($object->format_valid && $object->smtp_check) {
+      $flag = true;
+    }
+
+    else {
+      $flag = false;
+    }
+
+    if($flag == false) {
       $_SESSION["emailErr"] = "Enter your Email-ID in proper format";
     }
 
     else {
       return $email;
     }
-
+    
   }
 
   public static function input($data) {
@@ -136,3 +179,4 @@ class Check {
   }
 
 }
+?>
