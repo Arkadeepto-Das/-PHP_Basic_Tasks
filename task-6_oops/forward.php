@@ -42,33 +42,6 @@ session_start();
         else {
 
           header("Location: pdf.php");
-
-        //   $filename = $_FILES["image"]["name"];
-        //   $tempname = $_FILES["image"]["tmp_name"];
-        //   $filepath = $value->uploadImage($filename, $tempname);
-        //   $fullname = $value->fullname();
-        //   echo "<img src='$filepath'>";
-        //   echo "<p>" . "Hello" . " " . $fullname . "</p>";
-
-        //   echo "<table>";
-        //   echo "<tr>";
-        //   echo "<th>" . "Subjects" . "</th>";
-        //   echo "<th>" . "Marks" . "</th>";
-        //   echo "</tr>";
-          
-        //   foreach($result as $key=>$val) {
-
-        //     echo "<tr>";
-        //     echo "<td>" . $key . "</td>";
-        //     echo "<td>" . $val . "</td>";
-        //     echo "</tr>";
-          
-        //   }
-
-        //   echo "</table>";
-
-        //   echo "<p>" . "Phone number : " . $phonenum . "</p>";
-        //   echo "<p>" . "Email-ID : " . $emailcheck . "</p>";
       
         }
 
